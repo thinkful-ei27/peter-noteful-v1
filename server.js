@@ -12,12 +12,16 @@ app.listen(8080, function() {
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;
-  const results = data.filter(item => item.title.includes(searchTerm));
-  res.json(results);
+  if (searchTerm) {
+    let results = data.filter(item => item.title.includes(searchTerm));
+    res.json(results);
+  } else {
+    res.json(data);
+  }
 });
 
 app.get('/api/notes/:id', (req, res) => {
   const id = req.params.id;
-  const note = data.find(item => item.id === Number(id));
+  let note = data.find(item => item.id === Number(id));
   res.json(note);
 });
