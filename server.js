@@ -10,7 +10,6 @@ const { requestLogger } = require('./middleware/logger');
 const app = express(); 
 
 // Middleware
-
 // log all requests
 app.use(requestLogger);
 
@@ -20,6 +19,8 @@ app.use(express.static('public'));
 // Parse request body
 app.use(express.json());
 
+
+// Routes
 app.get('/api/notes', (req, res, next) => {
   const { searchTerm } = req.query;
 
@@ -44,12 +45,6 @@ app.get('/api/notes/:id', (req, res, next) => {
       next();
     }
   });
-  // let note = data.find(item => item.id === Number(id));
-  // res.json(note);
-});
-
-app.get('/boom', (req, res, next) => {
-  throw new Error('Boom!!');
 });
 
 app.put('/api/notes/:id', (req, res, next) => {
@@ -63,8 +58,7 @@ app.put('/api/notes/:id', (req, res, next) => {
       updateObj[field] = req.body[field];
     }
   });
-  console.log(req.body);
-  console.log(updateObj);
+
   notes.update(id, updateObj, (err, item) => {
     if (err) {
       return next(err);
@@ -76,6 +70,8 @@ app.put('/api/notes/:id', (req, res, next) => {
     }
   });
 });
+
+
 
 // Error handling
 app.use(function (req, res, next) {
