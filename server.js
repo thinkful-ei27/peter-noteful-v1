@@ -4,12 +4,15 @@
 const express = require('express');
 const data = require('./db/notes');
 const { PORT } = require('./config');
+const { requestLogger } = require('./middleware/logger');
 const app = express(); 
 
 // ADD STATIC SERVER....
 app.listen(PORT, function() {
   console.info(`Server listening on ${this.address().port}`);
 }).on('error', err => console.log(err));
+
+app.use(requestLogger);
 
 app.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;
