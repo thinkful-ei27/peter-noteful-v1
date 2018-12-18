@@ -3,26 +3,40 @@
 // Load array of notes
 const express = require('express');
 const data = require('./db/notes');
+const simDB = require('./db/simDB');
+const notes = simDB.initialize(data);
 const { PORT } = require('./config');
 const { requestLogger } = require('./middleware/logger');
 const app = express(); 
 
 app.use(requestLogger);
 
-app.get('/api/notes', (req, res) => {
-  const searchTerm = req.query.searchTerm;
-  if (searchTerm) {
-    let results = data.filter(item => item.title.includes(searchTerm));
-    res.json(results);
-  } else {
-    res.json(data);
-  }
+app.get('/api/notes', (req, res, next) => {
+  const { searchTerm } = req.query;
+
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err); // goes to error handler
+    }
+    res.json(list); // responds with filtered array
+  });
 });
 
-app.get('/api/notes/:id', (req, res) => {
-  const id = req.params.id;
-  let note = data.find(item => item.id === Number(id));
-  res.json(note);
+app.get('/api/notes/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  notes.find(id, (err, item) => {
+    if (err) {
+      return next(err);
+    }
+    if (item) {
+      res.json(item);
+    } else {
+      next();
+    }
+  });
+  // let note = data.find(item => item.id === Number(id));
+  // res.json(note);
 });
 
 app.get('/boom', (req, res, next) => {
