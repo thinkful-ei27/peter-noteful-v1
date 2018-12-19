@@ -79,7 +79,14 @@ router.post('/notes', (req, res, next) => {
 
 router.delete('/notes/:id', (req, res, next) => {
   const { id } = req.params;
-  notes.delete(id, (err) => {
+  // How do i make sure that id from params matches id from notes?
+
+  notes.delete(id, (err, num) => {
+    if (num === null) {
+      const err = new Error('Item does not exist');
+      err.status = 500;
+      return next(err);
+    }
     if (err) {
       return next(err);
     }
