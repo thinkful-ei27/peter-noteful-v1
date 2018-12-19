@@ -59,7 +59,7 @@ router.post('/notes', (req, res, next) => {
   const { title, content } = req.body;
 
   const newItem = { title, content };
-  if (!newItem.title || !newItem.content) {
+  if (!newItem.title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
     return next(err);
@@ -76,5 +76,17 @@ router.post('/notes', (req, res, next) => {
     }
   });
 });
+
+router.delete('/notes/:id', (req, res, next) => {
+  const { id } = req.params;
+  notes.delete(id, (err) => {
+    if (err) {
+      return next(err);
+    }
+    console.log(`Deleted note item \`${id}\``);
+    res.status(204).end();
+  });
+});
+
 
 module.exports = router;
