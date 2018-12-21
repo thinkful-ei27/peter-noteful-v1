@@ -37,6 +37,10 @@ app.use(function (err, req, res, next) {
 });
 
 // ADD STATIC SERVER....
-app.listen(PORT, function() {
-  console.info(`Server listening on ${this.address().port}`);
-}).on('error', err => console.log(err));
+if (require.main === module) {
+  app.listen(PORT, function() {
+    console.info(`Server listening on ${this.address().port}`);
+  }).on('error', err => console.log(err));
+} 
+
+module.exports = app; // Export for testing
