@@ -156,7 +156,6 @@ describe('PUT /api/notes/:id', function () {
         expect(res.body.message).to.equal('Missing `title` in request body');
       });
   });
-
 });
 
 describe('DELETE  /api/notes/:id', function () {
